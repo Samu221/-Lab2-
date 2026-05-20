@@ -1,0 +1,4 @@
+ciao mondo
+ciao chatgpt
+mondo del map reduce
+ciao mondo

@@ -1,0 +1,3 @@
+il framework map reduce funziona
+map reduce usa mapper e reducer
+il reducer conta le parole
