@@ -1,0 +1,36 @@
+[05-06-2026 11:21:57.230] [processo:mr.c      ] [PID:159886] [TID:140423551493952] [funzione:mr_start      ] inzio esecuzione di mr_start
+[05-06-2026 11:21:57.232] [processo:mr.c      ] [PID:159886] [TID:140423551493952] [funzione:mr_start      ] pipe main_to_mapper creata
+[05-06-2026 11:21:57.233] [processo:mr.c      ] [PID:159886] [TID:140423551493952] [funzione:mr_start      ] pipe mapper_to_reducer creata
+[05-06-2026 11:21:57.235] [processo:mr.c      ] [PID:159886] [TID:140423551493952] [funzione:mr_start      ] pipe reducer_to_main creata
+[05-06-2026 11:21:57.236] [processo:mr.c      ] [PID:159887] [TID:140423551493952] [funzione:mr_start      ] processo mapper iniziato con fork
+[05-06-2026 11:21:57.236] [processo:mr.c      ] [PID:159888] [TID:140423551493952] [funzione:mr_start      ] processo reducer inizato con fork
+[05-06-2026 11:21:57.240] [processo:mapper.c  ] [PID:159887] [TID:140423548892864] [funzione:reader_thread ] mapper reader thread iniziato
+[05-06-2026 11:21:57.240] [processo:mapper.c  ] [PID:159887] [TID:140423540500160] [funzione:worker_thread ] mapper worker thread iniziato
+[05-06-2026 11:21:57.240] [processo:mapper.c  ] [PID:159887] [TID:140423532107456] [funzione:worker_thread ] mapper worker thread iniziato
+[05-06-2026 11:21:57.240] [processo:mapper.c  ] [PID:159887] [TID:140423523714752] [funzione:worker_thread ] mapper worker thread iniziato
+[05-06-2026 11:21:57.240] [processo:mapper.c  ] [PID:159887] [TID:140423515322048] [funzione:worker_thread ] mapper worker thread iniziato
+[05-06-2026 11:21:57.240] [processo:mr.c      ] [PID:159886] [TID:140423551493952] [funzione:writer        ] file di input aperto
+[05-06-2026 11:21:57.242] [processo:reducer.c ] [PID:159888] [TID:140423548892864] [funzione:reader_thread ] reducer reader thread iniziato
+[05-06-2026 11:21:57.242] [processo:reducer.c ] [PID:159888] [TID:140423540500160] [funzione:worker_thread ] reducer worker thread creato
+[05-06-2026 11:21:57.242] [processo:reducer.c ] [PID:159888] [TID:140423532107456] [funzione:worker_thread ] reducer worker thread creato
+[05-06-2026 11:21:57.242] [processo:reducer.c ] [PID:159888] [TID:140423523714752] [funzione:worker_thread ] reducer worker thread creato
+[05-06-2026 11:21:57.242] [processo:reducer.c ] [PID:159888] [TID:140423515322048] [funzione:worker_thread ] reducer worker thread creato
+[05-06-2026 11:21:57.256] [processo:mr.c      ] [PID:159886] [TID:140423551493952] [funzione:writer        ] file di input chiuso, inviate linee: 76
+[05-06-2026 11:21:57.267] [processo:mr.c      ] [PID:159886] [TID:140423551493952] [funzione:writer        ] file di input aperto
+[05-06-2026 11:21:57.271] [processo:mr.c      ] [PID:159886] [TID:140423551493952] [funzione:writer        ] file di input chiuso, inviate linee: 70
+[05-06-2026 11:21:57.273] [processo:mapper.c  ] [PID:159887] [TID:140423548892864] [funzione:reader_thread ] mapper reader thread finito, ha letto: 146 linee
+[05-06-2026 11:21:57.275] [processo:mapper.c  ] [PID:159887] [TID:140423515322048] [funzione:worker_thread ] mapper worker thread finito, coppie prodotte: 26
+[05-06-2026 11:21:57.275] [processo:mapper.c  ] [PID:159887] [TID:140423540500160] [funzione:worker_thread ] mapper worker thread finito, coppie prodotte: 43
+[05-06-2026 11:21:57.275] [processo:mapper.c  ] [PID:159887] [TID:140423523714752] [funzione:worker_thread ] mapper worker thread finito, coppie prodotte: 35
+[05-06-2026 11:21:57.275] [processo:mapper.c  ] [PID:159887] [TID:140423532107456] [funzione:worker_thread ] mapper worker thread finito, coppie prodotte: 42
+[05-06-2026 11:21:57.283] [processo:mr.c      ] [PID:159887] [TID:140423551493952] [funzione:mr_start      ] processo mapper finito
+[05-06-2026 11:21:57.305] [processo:reducer.c ] [PID:159888] [TID:140423548892864] [funzione:reader_thread ] reducer reader thread finito, ha letto: 1092 token totali, raggruppati in 615 token distinti
+[05-06-2026 11:21:57.305] [processo:reducer.c ] [PID:159888] [TID:140423523714752] [funzione:worker_thread ] reducer worker thread finito, ha elaborato: 163 gruppi
+[05-06-2026 11:21:57.305] [processo:reducer.c ] [PID:159888] [TID:140423515322048] [funzione:worker_thread ] reducer worker thread finito, ha elaborato: 145 gruppi
+[05-06-2026 11:21:57.305] [processo:reducer.c ] [PID:159888] [TID:140423532107456] [funzione:worker_thread ] reducer worker thread finito, ha elaborato: 141 gruppi
+[05-06-2026 11:21:57.305] [processo:reducer.c ] [PID:159888] [TID:140423540500160] [funzione:worker_thread ] reducer worker thread finito, ha elaborato: 166 gruppi
+[05-06-2026 11:21:57.321] [processo:mr.c      ] [PID:159888] [TID:140423551493952] [funzione:mr_start      ] processo reducer finito
+[05-06-2026 11:21:57.326] [processo:mr.c      ] [PID:159886] [TID:140423551493952] [funzione:sort_write    ] file di output aperto
+[05-06-2026 11:21:57.332] [processo:mr.c      ] [PID:159886] [TID:140423551493952] [funzione:sort_write    ] file di output chiuso
+[05-06-2026 11:21:57.335] [processo:mr.c      ] [PID:159886] [TID:140423551493952] [funzione:main_function ] elaborazione terminata, ha elaborato: 615 coppie
+[05-06-2026 11:21:57.339] [processo:mr.c      ] [PID:159886] [TID:140423551493952] [funzione:mr_start      ] fine esecuzione di mr_start
