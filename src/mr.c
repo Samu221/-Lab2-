@@ -95,7 +95,7 @@ int log_event(mr_t mr, const char *process, const char *event, const char *messa
     return 0;
 }
 
-//oridnamento e scrituttura dell'output
+//ordinamento e scrittura dell'output
 int sort_write(mr_t mr, const char *output_path, mr_out_record_t *output, ssize_t output_len) {
 
     if (!output || !output_path) {
@@ -187,7 +187,7 @@ int writer(mr_t mr, const char *input_path, int main_to_mapper_write_fd ) {
             return -1;
         }
 
-        //scritutta del testo contenuto nella linea
+        //scrittura del testo contenuto nella linea
         if (writen(main_to_mapper_write_fd, line, line_len) == -1) {
 
             fclose(input_file);
@@ -465,7 +465,7 @@ int mr_start(mr_t mr, const char *input_path, const char *output_path) {
     }
     mr->log_sem = log_sem;
     
-    log_event(mr, "mr.c", "mr_start", "inzio esecuzione di mr_start");
+    log_event(mr, "mr.c", "mr_start", "inizio esecuzione di mr_start");
 
     //creazione delle pipe
     int main_to_mapper[2];
@@ -576,7 +576,7 @@ int mr_start(mr_t mr, const char *input_path, const char *output_path) {
     if(reducer_pid == 0) {
         // Processo reducer
 
-        log_event(mr, "mr.c", "mr_start", "processo reducer inizato con fork");
+        log_event(mr, "mr.c", "mr_start", "processo reducer iniziato con fork");
 
         // input=mapper_to_reducer                           output=reducer_to_main
         if (dup2(mapper_to_reducer[0], STDIN_FILENO) == -1 || dup2(reducer_to_main[1], STDOUT_FILENO) == -1) {

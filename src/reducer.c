@@ -14,6 +14,7 @@ static int emit_result(const char *token, const void *result, size_t result_size
     size_t result_len = result_size;
 
     mtx_lock(ctx->out_mtx);
+    //scrivo sulla pipe lunghezza del token, lunghezza del risultato, token e risultato
     if (writen(STDOUT_FILENO, &token_len, sizeof(size_t)) == -1) {
         mtx_unlock(ctx->out_mtx);
         return -1;
@@ -49,6 +50,7 @@ static int reader_thread(void *arg) {
     size_t groups_capacity = 16;
     size_t groups_count = 0;
 
+    //array di dimensione 16 di tipo reduce_group_t che uso per raggruppare insieme risultati con stesso token
     reduce_group_t **groups = malloc(sizeof(reduce_group_t*) * groups_capacity);
     if (!groups) return -1;
 
@@ -94,12 +96,14 @@ static int reader_thread(void *arg) {
             break;
         }
 
-
         int trovato=0;
 
+        
+        //dopo aver letto <token, processed_token> raggruppo le coppie con lo stesso token
         for(size_t i=0; i<groups_count; i++){ 
             if (strcmp(groups[i]->token, token) == 0) {
                 trovato=1;
+                //se lo trovo aggiorno i valori
                 if (groups[i]->count == groups[i]->capacity) {
                     size_t new_capacity = groups[i]->capacity * 2;
                     mr_value_t *new_values = realloc(groups[i]->values, sizeof(mr_value_t) * new_capacity);
@@ -119,6 +123,7 @@ static int reader_thread(void *arg) {
             }
         }
 
+        //se non lo trovo, lo aggiungo all'array
         if(!trovato){
             if (groups_count == groups_capacity) {
                 size_t new_capacity = groups_capacity * 2;
@@ -169,6 +174,7 @@ static int reader_thread(void *arg) {
     }
 
     free(groups);
+    // segnala ai worker che non arriveranno più gruppi
     queue_close(mr, q);
 
     char msg[128];
@@ -191,11 +197,13 @@ static int worker_thread(void *arg) {
     unsigned long gruppi_elaborati=0;
     while (1) {
 
+        //estraggo dalla coda un gruppo elaborato
         reduce_group_t *group = queue_pop(mr, ctx->q);
 
         if (!group)
             break;
 
+        //chiamo la funzione reducer sul gruppo
         mr_get_reducer(mr)(
             group->token,
             group->values,
@@ -227,7 +235,7 @@ static int worker_thread(void *arg) {
 }
 
 int reducer_process_main(mr_t mr){
-    //mutex 
+    //mutex per la l'emit
     mtx_t out_mutex;
     mtx_init(&out_mutex, mtx_plain);
 
@@ -242,6 +250,7 @@ int reducer_process_main(mr_t mr){
     reader_ctx.mr=mr;
     reader_ctx.q=q;
 
+    //creo il thread reader
     if (thrd_create(&reader_tid, reader_thread, &reader_ctx) != thrd_success) {
         queue_destroy(mr, q);
         return -1;
@@ -263,6 +272,7 @@ int reducer_process_main(mr_t mr){
         if (!ctx) {
 
             queue_close(mr, q);
+            thrd_join(reader_tid, NULL);
 
             for (size_t j = 0; j < i; j++) {
                 thrd_join(worker_tids[j], NULL);
@@ -278,6 +288,7 @@ int reducer_process_main(mr_t mr){
         ctx->mr = mr;
         ctx->out_mtx = &out_mutex;
 
+        //creo i worker 
         if (thrd_create(&worker_tids[i], worker_thread, ctx ) != thrd_success) {
 
             free(ctx);

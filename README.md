@@ -71,6 +71,10 @@ Il sistema è composto da tre processi principali:
 ├── logs/
 │
 ├── results/
+│ ├── reader_int
+│ ├── reader_string
+│ ├── result_reader_int.c
+│ ├── result_reader_string.c
 │
 ├── Makefile
 └── README.md
