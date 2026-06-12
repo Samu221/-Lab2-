@@ -413,11 +413,13 @@ int main_function(mr_t mr, const char *input_path,const char *output_path, int m
         token[token_len] = '\0';
 
         //alloco spazio per il risultato
-        char *result = malloc(result_len);
-
-        if (!result) {
-            free(token);
-            return -1;
+        char *result = "NULL";
+        if (result_len > 0) {
+            result = malloc(result_len);
+            if (!result) {
+                free(token);
+                return -1;
+            }
         }
 
         //leggo il risultato
