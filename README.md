@@ -120,6 +120,18 @@ Inverted Index
 
 Costruisce un indice inverso parola → file contenenti la parola.
 
+### Per vedere risultati dell'esecuzione di make test:
+Dalla directory `/-Lab2-/result` eseguire:
+
+```bash
+echo "=== word_count ==="
+./reader_int word_count.mro
+echo "=== line_count ==="
+./reader_int line_count.mro
+echo "=== inverted_index ==="
+./reader_string inverted_index.mro
+```
+
 
 ### Per rimuovere file compilati e output:
 
@@ -183,7 +195,8 @@ POSIX compliant system
 
 Compilazione con:
 
--std=c11
+-Iinclude
 -Wall -Wextra
--D_POSIX_C_SOURCE=200809L
+-std=c11
 -D_GNU_SOURCE
+-D_POSIX_C_SOURCE=200809L

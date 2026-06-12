@@ -20,6 +20,7 @@
 #include "mapper.h"
 #include "reducer.h"
 #include "config.h"
+#include "len_limits.h"
 
 
 /* Definizione di mr_t */
@@ -159,6 +160,12 @@ int writer(mr_t mr, const char *input_path, int main_to_mapper_write_fd ) {
         size_t file_name_len = strlen(input_path);
         size_t line_len = strlen(line);
 
+        // Rimuoviamo il newline se presente
+        if (line_len > 0 && line[line_len - 1] == '\n') {
+            line[line_len - 1] = '\0';  // Sostituisci '\n' con terminatore
+            line_len--;                   // Aggiorna la lunghezza
+        }
+
         //scrittura della lunghezza del nome del file
         if (writen(main_to_mapper_write_fd, &file_name_len, sizeof(size_t)) == -1) {
 
@@ -210,6 +217,12 @@ int writer(mr_t mr, const char *input_path, int main_to_mapper_write_fd ) {
     return 0;
 }
 
+int cmp_string(const void *a, const void *b) {
+    const char * const *sa = a;
+    const char * const *sb = b;
+
+    return strcmp(*sa, *sb);
+}
 int main_function(mr_t mr, const char *input_path,const char *output_path, int main_to_mapper, int reducer_to_main){
 
     //Controlla il tipo del percorso di input usando stat():
@@ -237,18 +250,61 @@ int main_function(mr_t mr, const char *input_path,const char *output_path, int m
 
         struct dirent *entry;
 
+        // Memorizza i nomi dei file per poterli ordinare
+        char **names = NULL;
+        size_t count = 0;
+
         //Scorre tutte le entry della directory.
-        
+
         while ((entry = readdir(dir)) != NULL) {
 
             /* Ignora le entry speciali:
-              "."  directory corrente
-              ".." directory padre */
-            
+            "."  directory corrente
+            ".." directory padre */
+
             if (strcmp(entry->d_name, ".") == 0 ||
                 strcmp(entry->d_name, "..") == 0) {
                 continue;
             }
+
+            char **tmp = realloc(names, (count + 1) * sizeof(char *));
+            if (!tmp) {
+                closedir(dir);
+
+                for (size_t i = 0; i < count; i++) {
+                    free(names[i]);
+                }
+
+                free(names);
+
+                return -1;
+            }
+
+            names = tmp;
+            names[count] = strdup(entry->d_name);
+
+            if (!names[count]) {
+                closedir(dir);
+
+                for (size_t i = 0; i < count; i++) {
+                    free(names[i]);
+                }
+
+                free(names);
+
+                return -1;
+            }
+
+            count++;
+        }
+
+        closedir(dir);
+
+        // Ordina i nomi in ordine lessicografico
+        qsort(names, count, sizeof(char *), cmp_string);
+
+        // Processa i file nell'ordine richiesto
+        for (size_t i = 0; i < count; i++) {
 
             //percorso completo (PATH_MAX è una costante definita dal sistema operativo inclusa con limits.h)
             char fullpath[PATH_MAX];
@@ -260,15 +316,17 @@ int main_function(mr_t mr, const char *input_path,const char *output_path, int m
                 PATH_MAX,
                 "%s/%s",
                 input_path,
-                entry->d_name
+                names[i]
             );
 
             //Recupera informazioni sul file corrente.
-            
+
             struct stat fst;
 
-            if (stat(fullpath, &fst) == -1)
+            if (stat(fullpath, &fst) == -1) {
+                free(names[i]);
                 continue;
+            }
 
             //Processa solamente file regolari.
             if (S_ISREG(fst.st_mode)) {
@@ -276,19 +334,26 @@ int main_function(mr_t mr, const char *input_path,const char *output_path, int m
                 // invio del file al mapper
                 if (writer(mr, fullpath, main_to_mapper) == -1) {
 
-                    closedir(dir);
+                    free(names[i]);
+
+                    for (size_t j = i + 1; j < count; j++) {
+                        free(names[j]);
+                    }
+
+                    free(names);
 
                     return -1;
                 }
             }
+
+            free(names[i]);
         }
 
-        // chiusura directory
-        closedir(dir);
+        free(names);
 
     } else {
         // Caso non supportato: non è né file né directory.
-    
+
         return -1;
     }
 
@@ -315,9 +380,15 @@ int main_function(mr_t mr, const char *input_path,const char *output_path, int m
         if (readn(reducer_to_main, &token_len, sizeof(token_len)) <= 0)
             break;
 
+        if(token_len == 0 || token_len> MR_MAX_TOKEN_LEN)
+            return -1;
+
         //leggo lunghezza del risultato
         if (readn(reducer_to_main, &result_len, sizeof(result_len)) <= 0)
             break;
+
+        if(result_len == 0 || result_len> MR_MAX_VALUE_LEN)
+            return -1;
 
         //alloco spazio per il token
         char *token = malloc(token_len + 1);

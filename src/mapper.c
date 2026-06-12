@@ -1,4 +1,5 @@
 #include "mapper.h"
+#include "len_limits.h"
 
 static int emit_pair(const char *token, const void *value, size_t value_size, void *emit_arg) {
 
@@ -69,6 +70,11 @@ static int reader_thread(void *arg) {
             break;
         }
 
+        if(file_name_len == 0 || file_name_len > MR_MAX_TOKEN_LEN){
+            free(file_line);
+            break;
+        }
+
         char *file_name = malloc(file_name_len + 1);
         if(!file_name){
             free(file_line);
@@ -92,6 +98,11 @@ static int reader_thread(void *arg) {
         //lunghezza linea
         if(readn(STDIN_FILENO, &line_len, sizeof(line_len)) <= 0){
             free (file_name);
+            free(file_line);
+            break;
+        }
+
+        if(line_len > MR_MAX_LINE_LEN){
             free(file_line);
             break;
         }

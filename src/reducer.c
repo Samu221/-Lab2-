@@ -1,4 +1,5 @@
 #include "reducer.h"
+#include "len_limits.h"
 
 static int emit_result(const char *token, const void *result, size_t result_size, void *emit_arg ){
 
@@ -64,11 +65,17 @@ static int reader_thread(void *arg) {
             break;
         }
 
+        if(token_len == 0 || token_len > MR_MAX_TOKEN_LEN){
+            return -1;
+        }
 
         if (readn(STDIN_FILENO, &value_len, sizeof(size_t)) <= 0){
             break;
         }
 
+        if(value_len == 0 || value_len > MR_MAX_VALUE_LEN){
+            return -1;
+        }
 
         char *token = malloc(token_len + 1);
 
