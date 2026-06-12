@@ -66,6 +66,7 @@ static int reader_thread(void *arg) {
         }
 
         if(token_len == 0 || token_len > MR_MAX_TOKEN_LEN){
+            errno = EINVAL;
             return -1;
         }
 
@@ -74,6 +75,7 @@ static int reader_thread(void *arg) {
         }
 
         if(value_len == 0 || value_len > MR_MAX_VALUE_LEN){
+            errno = EINVAL;
             return -1;
         }
 

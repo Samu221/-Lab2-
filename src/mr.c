@@ -126,10 +126,12 @@ int sort_write(mr_t mr, const char *output_path, mr_out_record_t *output, ssize_
     //scrittura dell'output sul file
     for (ssize_t i = 0; i < output_len; i++) {
 
-        fwrite(&output[i].token_len, sizeof(size_t), 1, output_file);
-        fwrite(output[i].token, 1, output[i].token_len, output_file);
+        int token_len_int = (int)output[i].token_len;
+        int result_len_int = (int)output[i].result_len;
 
-        fwrite(&output[i].result_len, sizeof(size_t), 1, output_file);
+        fwrite(&token_len_int, sizeof(int), 1, output_file);  
+        fwrite(output[i].token, 1, output[i].token_len, output_file);
+        fwrite(&result_len_int, sizeof(int), 1, output_file);
         fwrite(output[i].result, 1, output[i].result_len, output_file);
   
     }
@@ -380,15 +382,19 @@ int main_function(mr_t mr, const char *input_path,const char *output_path, int m
         if (readn(reducer_to_main, &token_len, sizeof(token_len)) <= 0)
             break;
 
-        if(token_len == 0 || token_len> MR_MAX_TOKEN_LEN)
+        if(token_len == 0 || token_len> MR_MAX_TOKEN_LEN){
+            errno = EINVAL;
             return -1;
+        }
 
         //leggo lunghezza del risultato
         if (readn(reducer_to_main, &result_len, sizeof(result_len)) <= 0)
             break;
 
-        if(result_len == 0 || result_len> MR_MAX_VALUE_LEN)
+        if(result_len> MR_MAX_VALUE_LEN){
+            errno = EINVAL;
             return -1;
+        }
 
         //alloco spazio per il token
         char *token = malloc(token_len + 1);
