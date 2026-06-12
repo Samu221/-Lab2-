@@ -126,12 +126,9 @@ int sort_write(mr_t mr, const char *output_path, mr_out_record_t *output, ssize_
     //scrittura dell'output sul file
     for (ssize_t i = 0; i < output_len; i++) {
 
-        int token_len_int = (int)output[i].token_len;
-        int result_len_int = (int)output[i].result_len;
-
-        fwrite(&token_len_int, sizeof(int), 1, output_file);  
+        fwrite(&output[i].token_len, sizeof(size_t), 1, output_file);  
         fwrite(output[i].token, 1, output[i].token_len, output_file);
-        fwrite(&result_len_int, sizeof(int), 1, output_file);
+        fwrite(&output[i].result_len, sizeof(size_t), 1, output_file); 
         fwrite(output[i].result, 1, output[i].result_len, output_file);
   
     }

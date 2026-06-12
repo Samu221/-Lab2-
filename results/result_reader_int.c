@@ -19,9 +19,15 @@ int main(int argc, char **argv) {
 
         fread(&result_len, sizeof(uint64_t), 1, f);
 
-        char *result = malloc(result_len + 1);
-        fread(result, 1, result_len, f);
-        result[result_len] = '\0';
+        char *result = NULL;
+        if (result_len > 0) {
+            result = malloc(result_len + 1);
+            fread(result, 1, result_len, f);
+            result[result_len] = '\0';
+        } else {
+            result = malloc(1);
+            result[0] = '\0';
+        }
 
         int value;
         memcpy(&value, result, sizeof(int));
