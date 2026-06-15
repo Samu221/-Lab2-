@@ -70,7 +70,7 @@ static int reader_thread(void *arg) {
             break;
         }
 
-        if(file_name_len == 0 || file_name_len > MR_MAX_TOKEN_LEN){
+        if(file_name_len == 0 || file_name_len > MR_MAX_FILENAME_LEN){
             free(file_line);
             errno = EINVAL;
             break;
