@@ -2,17 +2,10 @@
 # COMPILATORE
 # ====================================================================================
 
-# Variabile che contiene il nome del compilatore da utilizzare.
-CC = gcc
+Compilatore = gcc
 
-
-# Variabile contenente tutti i flag passati al compilatore.
-#
 # -Iinclude
 #   Aggiunge la cartella "include/" tra i path in cui cercare gli header file (.h).
-#
-# -Wall -Wextra
-#   Abilitano warning aggiuntivi più severi.
 #
 # -std=c11
 #   Usa lo standard C11.
@@ -28,7 +21,7 @@ CC = gcc
 #   - getline
 #   - clock_gettime
 
-CFLAGS = -Iinclude -Wall -Wextra -std=c11 -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L
+CFLAGS = -Iinclude -std=c11 -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L
 
 
 # ====================================================================================
@@ -36,12 +29,9 @@ CFLAGS = -Iinclude -Wall -Wextra -std=c11 -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809
 # ====================================================================================
 
 # Directory contenente i sorgenti principali del framework.
-
 SRC_DIR = src
 
-
 # Directory contenente gli esempi/test.
-
 EX_DIR = examples
 
 
@@ -51,7 +41,6 @@ EX_DIR = examples
 # ====================================================================================
 
 # Lista completa di tutti i file sorgente (.c)
-# che fanno parte della libreria MapReduce.
 
 SRC = $(SRC_DIR)/mr.c \
       $(SRC_DIR)/mapper.c \
@@ -69,8 +58,6 @@ OBJ = $(SRC:.c=.o)
 # ====================================================================================
 # LIBRERIA STATICA
 # ====================================================================================
-
-# Nome della libreria statica finale prodotta dal progetto.
 
 LIB = libmr.a
 
@@ -117,15 +104,10 @@ all: $(LIB) $(TEST_BINS)
 # Regola che crea la libreria statica usando tutti gli object file contenuti in $(OBJ).
 #
 # "ar" serve per creare librerie statiche.
-#
 # r = sostituisce i file già presenti
-#
 # c = crea l'archivio se non esiste
-#
 # s = crea indice dei simboli (aiuta il linker a trovare velocemente i simboli della libreria.)
-#
 # $@ = target corrente -> libmr.a
-#
 # $^ = tutte le dipendenze -> lista di tutti i .o
 
 $(LIB): $(OBJ)
@@ -138,19 +120,14 @@ $(LIB): $(OBJ)
 # ====================================================================================
 
 # Pattern rule generica.
-#
-# $(CC) -> gcc
-#
+# $(Compilatore) -> gcc
 # $(CFLAGS) -> tutti i flag definiti sopra
-#
 # -c compila senza effettuare linking
-#
 # $< -> file .c sorgente
-#
 # -o $@ -> file .o finale
 
 %.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(Compilatore) $(CFLAGS) -c $< -o $@
 
 
 
@@ -159,17 +136,13 @@ $(LIB): $(OBJ)
 # ====================================================================================
 
 # Regola generica per creare gli eseguibili finali.
-#
 # $< -> file sorgente del test
-#
 # -L. aggiunge la directory corrente ai path delle librerie
-#
 # -lmr linka la libreria "libmr.a"
-#
 # -o $@ nome eseguibile finale
 
 %: $(EX_DIR)/%.c $(LIB)
-	$(CC) $(CFLAGS) $< -L. -lmr -o $@
+	$(Compilatore) $(CFLAGS) $< -L. -lmr -o $@
 
 
 
@@ -178,12 +151,8 @@ $(LIB): $(OBJ)
 # ====================================================================================
 
 # Target che esegue automaticamente tutti i test.
-#
-# 1.Dipende da "all" quindi prima compila tutto il progetto.
-# 2.Stampa il messaggio.
-# 3.Ciclo shell che esegue tutti gli eseguibili.
-# 	uso doppio "$" perché make usa "$" per le sue variabili "$$" viene trasformato in "$" nella shell.
-# 4.Stampa solo se tutti i test terminano.
+# Dipende da "all" quindi prima compila tutto il progetto.
+
 test: all
 
 	@echo "Test di $(TESTS)"
@@ -202,20 +171,14 @@ test: all
 # ====================================================================================
 
 # Target usato per eliminare tutti i file generati automaticamente.
-#
 # rm -f rimuove i file senza chiedere conferma.
 #
 # Vengono eliminati:
 # $(SRC_DIR)/*.o -> object file dentro src/
-#
 # *.o -> eventuali object file nella root
-#
 # $(LIB) -> libreria statica libmr.a
-#
 # $(TEST_BINS) -> tutti gli eseguibili di test
-#
 # logs/*.log -> file di log presenti in logs
-#
 # results/*.mro -> file output presenti in results
 
 clean:
