@@ -6,7 +6,6 @@
 
 // Funzione Mapper: estrae parole alfanumeriche e invia <token, 1>
 int my_mapper(const mr_file_line_t *line, mr_emit_pair_t emit, void *emit_arg, void *user_arg) {
-    (void)user_arg; // Ignora user_arg se non usato
 
     char *token = malloc(256);
     size_t i = 0, j = 0;
@@ -38,8 +37,6 @@ int my_mapper(const mr_file_line_t *line, mr_emit_pair_t emit, void *emit_arg, v
 // Funzione Reducer: somma tutti gli '1' ricevuti per un token [1]
 int my_reducer(const char *token, const mr_value_t *values, size_t values_count, mr_emit_result_t emit, void *emit_arg, void *user_arg) {
 
-    (void)user_arg; // Ignora user_arg se non usato
-
     int sum = 0;
     for (size_t i = 0; i < values_count; i++) {
         if (values[i].size == sizeof(int)) {
@@ -52,8 +49,6 @@ int my_reducer(const char *token, const mr_value_t *values, size_t values_count,
 
 int main(int argc, char **argv) {
 
-    (void)argc; // Ignora argc se non usato
-    (void)argv; // Ignora argv se non usato
 
     mr_t mr;
     mr_attr_t attr;

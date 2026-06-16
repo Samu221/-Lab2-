@@ -5,7 +5,6 @@
 #include "mr.h"
 
 int my_mapper(const mr_file_line_t *line, mr_emit_pair_t emit, void *emit_arg, void *user_arg) {
-    (void)user_arg; // Ignora user_arg se non usato
 
     char *token = malloc(256);
     size_t i = 0, j = 0;
@@ -31,7 +30,6 @@ int my_mapper(const mr_file_line_t *line, mr_emit_pair_t emit, void *emit_arg, v
 }
 
 int my_reducer(const char *token, const mr_value_t *values, size_t values_count, mr_emit_result_t emit, void *emit_arg, void *user_arg){
-    (void)user_arg;
 
     char *files[values_count];
     size_t unique_count = 0;
@@ -86,9 +84,6 @@ int my_reducer(const char *token, const mr_value_t *values, size_t values_count,
 }
 
 int main(int argc, char **argv) {
-
-    (void)argc; // Ignora argc se non usato
-    (void)argv; // Ignora argv se non usato
 
     mr_t mr;
     mr_attr_t attr;

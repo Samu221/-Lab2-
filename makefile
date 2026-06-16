@@ -165,6 +165,21 @@ test: all
 	@echo "Tutti i test sono terminati"
 
 
+# ====================================================================================
+# ESECUZIONE AUTOMATICA TEST
+# ====================================================================================
+
+# Target che esegue automaticamente i reader_int e reader_string per interpetare i file mro dei risultati
+
+show_results:
+	@echo "=== word_count ==="
+	@./results/reader_int results/word_count.mro
+
+	@echo "=== line_count ==="
+	@./results/reader_int results/line_count.mro
+
+	@echo "=== inverted_index ==="
+	@./results/reader_string results/inverted_index.mro
 
 # ====================================================================================
 # PULIZIA FILE GENERATI

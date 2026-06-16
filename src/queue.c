@@ -51,7 +51,6 @@ queue_t *queue_create(mr_t mr, size_t capacity) {
     cnd_init(&q->not_empty);
     cnd_init(&q->not_full);
     
-    (void)mr;
     //log_event(mr, "queue.c", "queue_create", "coda creata");
 
     return q;
@@ -77,7 +76,6 @@ void queue_destroy(mr_t mr, queue_t *q) {
     // Libera struttura queue
     free(q);
 
-    (void)mr;
     //log_event(mr, "queue.c", "queue_destroy", "coda distrutta");
 };
 
@@ -89,8 +87,6 @@ void queue_push(mr_t mr, queue_t *q, void *item) {
     // Se la coda è piena e non è chiusa,
     // il thread produttore aspetta spazio libero
     while (q->count == q->capacity && !q->closed) {
-
-        (void)mr;
         //log_event(mr, "queue.c", "queue_push", "coda piena, attesa per spazio disponibile");
 
         cnd_wait(&q->not_full, &q->mtx);
@@ -112,7 +108,6 @@ void queue_push(mr_t mr, queue_t *q, void *item) {
     // Incrementa numero elementi
     q->count++;
 
-    (void)mr;
     //log_event(mr, "queue.c", "queue_push", "elemento inserito nella coda");
 
     // Sveglia eventuali thread consumatori
@@ -130,8 +125,6 @@ void *queue_pop(mr_t mr, queue_t *q) {
     // Se la coda è vuota ma non chiusa,
     // il consumatore aspetta nuovi elementi
     while (q->count == 0 && !q->closed) {
-
-        (void)mr;
         //log_event(mr, "queue.c", "queue_pop", "coda vuota, attesa per elementi disponibili");
 
         cnd_wait(&q->not_empty, &q->mtx);
@@ -153,7 +146,6 @@ void *queue_pop(mr_t mr, queue_t *q) {
     // Decrementa numero elementi
     q->count--;
 
-    (void)mr;
     //log_event(mr, "queue.c", "queue_pop", "elemento estratto dalla coda");
 
     // Sveglia eventuali produttori in attesa di spazio
@@ -173,7 +165,6 @@ void queue_close(mr_t mr, queue_t *q) {
     // Segna la coda come chiusa
     q->closed = 1;
 
-    (void)mr;
     //log_event(mr, "queue.c", "queue_close", "chiusura coda");
 
     // Sveglia tutti i thread bloccati su not_empty

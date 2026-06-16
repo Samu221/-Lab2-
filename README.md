@@ -121,17 +121,10 @@ Inverted Index
 Costruisce un indice inverso parola → file contenenti la parola.
 
 ### Per vedere risultati dell'esecuzione di make test:
-Dalla directory `/-Lab2-/result` eseguire:
 
 ```bash
-echo "=== word_count ==="
-./reader_int word_count.mro
-echo "=== line_count ==="
-./reader_int line_count.mro
-echo "=== inverted_index ==="
-./reader_string inverted_index.mro
+make show_results
 ```
-
 
 ### Per rimuovere file compilati e output:
 
