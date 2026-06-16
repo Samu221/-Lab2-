@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include "../include/mr.h"
+#include "mr.h"
 
 //conta righe
 

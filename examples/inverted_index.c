@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include "../include/mr.h"
+#include "mr.h"
 
 int my_mapper(const mr_file_line_t *line, mr_emit_pair_t emit, void *emit_arg, void *user_arg) {
     (void)user_arg; // Ignora user_arg se non usato

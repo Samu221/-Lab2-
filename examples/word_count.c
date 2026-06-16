@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include "../include/mr.h"
+#include "mr.h"
 
 // Funzione Mapper: estrae parole alfanumeriche e invia <token, 1>
 int my_mapper(const mr_file_line_t *line, mr_emit_pair_t emit, void *emit_arg, void *user_arg) {
